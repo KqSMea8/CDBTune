@@ -6,16 +6,6 @@ import logging
 import datetime
 
 
-def time_start():
-    return time.time()
-
-
-def time_end(start):
-    end = time.time()
-    delay = end - start
-    return delay
-
-
 def get_timestamp():
     """
     获取UNIX时间戳
@@ -61,7 +51,7 @@ class Logger:
 
     def info(self, msg):
         msg = "%s[INFO] %s" % (self.get_timestr(), msg)
-        #self.logger.info(msg)
+        self.logger.info(msg)
         self._write_file(msg)
 
     def error(self, msg):

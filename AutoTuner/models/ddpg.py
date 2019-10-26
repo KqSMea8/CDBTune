@@ -4,8 +4,6 @@ Deep Deterministic Policy Gradient Model
 
 """
 
-import os
-import sys
 import math
 import torch
 import pickle
@@ -15,14 +13,10 @@ from torch.nn import init, Parameter
 import torch.nn.functional as F
 import torch.optim as optimizer
 from torch.autograd import Variable
-sys.path.append('../')
 
 from OUProcess import OUProcess
 from replay_memory import ReplayMemory
-from prioritized_replay_memory import PrioritizedReplayMemory
-from environment.base import cdb_logger
 
-logger = cdb_logger
 
 # code from https://github.com/Kaixhin/NoisyNet-A3C/blob/master/model.py
 class NoisyLinear(nn.Linear):
@@ -153,19 +147,6 @@ class Actor(nn.Module):
             nn.Linear(128, 128),
             nn.Tanh(),
             nn.Dropout(0.3),
-            #....................
-            #nn.Linear(128, 128),
-            #nn.Tanh(),
-            #nn.Dropout(0.3),
-
-            #nn.Linear(128, 128),
-            #nn.Tanh(),
-            #nn.Dropout(0.3),
-
-            #nn.Linear(128, 128),
-            #nn.Tanh(),
-            #nn.Dropout(0.3),
-            #....................
             nn.Linear(128, 64),
             nn.Tanh(),
             nn.BatchNorm1d(64),
@@ -204,20 +185,6 @@ class Critic(nn.Module):
             nn.Linear(256, 256),
             nn.LeakyReLU(negative_slope=0.2),
             nn.BatchNorm1d(256),
-
-            #.......................
-            #nn.Linear(256, 256),
-            #nn.LeakyReLU(negative_slope=0.2),
-            #nn.BatchNorm1d(256),
-
-            #nn.Linear(256, 256),
-            #nn.LeakyReLU(negative_slope=0.2),
-            #nn.BatchNorm1d(256),
-
-            #nn.Linear(256, 256),
-            #nn.LeakyReLU(negative_slope=0.2),
-            #nn.BatchNorm1d(256),
-            #.......................
             nn.Linear(256, 64),
             nn.Tanh(),
             nn.Dropout(0.3),
@@ -268,11 +235,7 @@ class DDPG(object):
         self.gamma = opt['gamma']
         self.tau = opt['tau']
         self.ouprocess = ouprocess
-
         if mean_var_path is None:
-            mean = np.zeros(n_states)
-            var = np.zeros(n_states)
-        elif not os.path.exists(mean_var_path):
             mean = np.zeros(n_states)
             var = np.zeros(n_states)
         else:
@@ -283,16 +246,14 @@ class DDPG(object):
 
         if supervised:
             self._build_actor()
-            logger.info("Supervised Learning Initialized")
+            print("Supervised Learning Initialized")
         else:
             # Build Network
             self._build_network()
-            logger.info('Finish Initializing Networks')
-
-        self.replay_memory = PrioritizedReplayMemory(capacity=opt['memory_size'])
-        # self.replay_memory = ReplayMemory(capacity=opt['memory_size'])
+            print('Finish Initializing Networks')
+        self.replay_memory = ReplayMemory(capacity=opt['memory_size'])
         self.noise = OUProcess(n_actions)
-        logger.info('DDPG Initialzed!')
+        print('DDPG Initialzed!')
 
     @staticmethod
     def totensor(x):
@@ -320,7 +281,7 @@ class DDPG(object):
         # if model params are provided, load them
         if len(self.model_name):
             self.load_model(model_name=self.model_name)
-            logger.info("Loading model from file: {}".format(self.model_name))
+            print("Loading model from file: {}".format(self.model_name))
 
         # Copy actor's parameters
         self._update_target(self.target_actor, self.actor, tau=1.0)
@@ -343,41 +304,19 @@ class DDPG(object):
         self.noise.reset(sigma)
 
     def _sample_batch(self):
-        batch, idx = self.replay_memory.sample(self.batch_size)
-        # batch = self.replay_memory.sample(self.batch_size)
-        states = map(lambda x: x[0].tolist(), batch)
-        next_states = map(lambda x: x[3].tolist(), batch)
-        actions = map(lambda x: x[1].tolist(), batch)
-        rewards = map(lambda x: x[2], batch)
-        terminates = map(lambda x: x[4], batch)
+        batch = self.replay_memory.sample(self.batch_size)
+        states = map(lambda x: x.state.tolist(), batch)
+        next_states = map(lambda x: x.next_state.tolist(), batch)
+        actions = map(lambda x: x.action.tolist(), batch)
+        rewards = map(lambda x: x.reward, batch)
+        terminates = map(lambda x: x.terminate, batch)
 
-        return idx, states, next_states, actions, rewards, terminates
-
-    def add_sample(self, state, action, reward, next_state, terminate):
-        self.critic.eval()
-        self.actor.eval()
-        self.target_critic.eval()
-        self.target_actor.eval()
-        batch_state = self.normalizer([state.tolist()])
-        batch_next_state = self.normalizer([next_state.tolist()])
-        current_value = self.critic(batch_state, self.totensor([action.tolist()]))
-        target_action = self.target_actor(batch_next_state)
-        target_value = self.totensor([reward]) \
-            + self.totensor([0 if x else 1 for x in [terminate]]) \
-            * self.target_critic(batch_next_state, target_action) * self.gamma
-        error = float(torch.abs(current_value - target_value).data.numpy()[0])
-
-        self.target_actor.train()
-        self.actor.train()
-        self.critic.train()
-        self.target_critic.train()
-        self.replay_memory.add(error, (state, action, reward, next_state, terminate))
-
+        return states, next_states, actions, rewards, terminates
 
     def update(self):
         """ Update the Actor and Critic with a batch data
         """
-        idxs, states, next_states, actions, rewards, terminates = self._sample_batch()
+        states, next_states, actions, rewards, terminates = self._sample_batch()
         batch_states = self.normalizer(states)# totensor(states)
         batch_next_states = self.normalizer(next_states)# Variable(torch.FloatTensor(next_states))
         batch_actions = self.totensor(actions)
@@ -391,12 +330,6 @@ class DDPG(object):
         current_value = self.critic(batch_states, batch_actions)
         next_value = batch_rewards + mask * target_next_value * self.gamma
         # Update Critic
-
-        # update prioritized memory
-        error = torch.abs(current_value-next_value).data.numpy()
-        for i in range(self.batch_size):
-            idx = idxs[i]
-            self.replay_memory.update(idx, error[i][0])
 
         loss = self.loss_criterion(current_value, next_value)
         self.critic_optimizer.zero_grad()

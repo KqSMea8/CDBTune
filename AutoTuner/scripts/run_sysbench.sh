@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# script_path="/home/rmw/sysbench-1.0/src/lua/"
-script_path="/usr/local/sysbench1.0.14/share/sysbench/"
+script_path="/home/rmw/sysbench-1.0/src/lua/"
+# script_path="/usr/share/sysbench/"
 
-if [ "${1}" == "ro" ]
+if [ "${1}" == "read" ]
 then
     run_script=${script_path}"oltp_read_only.lua"
-elif [ "${1}" == "wo" ]
+elif [ "${1}" == "write" ]
 then
     run_script=${script_path}"oltp_write_only.lua"
 else
@@ -14,19 +14,15 @@ else
 fi
 
 sysbench ${run_script} \
-        --mysql-host=$2 \
+    --mysql-host=$2 \
 	--mysql-port=$3 \
-	--mysql-user=$4 \
-	--mysql-password=$5 \
+	--mysql-user=root \
+	--mysql-password=$4 \
 	--mysql-db=sbtest \
 	--db-driver=mysql \
-        --mysql-storage-engine=innodb \
-        --range-size=100 \
-        --events=0 \
-        --rand-type=uniform \
-	--tables=$6 \
-	--table-size=$7 \
-	--report-interval=10 \
-	--threads=$8 \
-	--time=$9 \
-	run >> ${10}
+	--tables=8 \
+	--table-size=5000000 \
+	--report-interval=3 \
+	--threads=48 \
+	--time=60 \
+	run >> $5

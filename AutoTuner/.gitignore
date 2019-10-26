@@ -4,8 +4,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-train_result
-tuner/nohup.out
 # C extensions
 *.so
 
@@ -125,6 +123,4 @@ result
 eval_result
 # Pickles
 *.pkl
-*.tar.gz
 
-save_models
