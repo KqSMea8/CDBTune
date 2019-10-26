@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-script_path="/usr/local/sysbench1.0.14/share/sysbench/"
+script_path="/home/rmw/sysbench-1.0/src/lua/"
 
 if [ ${1} == "read" ]
 then
@@ -15,13 +15,13 @@ fi
 sysbench ${run_script} \
 	--mysql-host=$2 \
 	--mysql-port=$3 \
-	--mysql-user=cdbtune \
+	--mysql-user=root \
 	--mysql-password=$4 \
 	--mysql-db=sbtest \
 	--db-driver=mysql \
 	--tables=8 \
 	--table-size=1000000 \
 	--report-interval=10 \
-	--threads=3 \
+	--threads=8 \
 	--time=60 \
 	prepare

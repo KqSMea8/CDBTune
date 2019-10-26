@@ -6,19 +6,14 @@ description: MySQL Env Utils
 
 import sys
 import time
-import base 
-
-import json
 import httplib
 import MySQLdb
-import requests
 import xmlrpclib
 
+from configs import instance_config
 from warnings import filterwarnings
-from base import Err,cdb_logger,os_quit
-
-
 filterwarnings('error', category=MySQLdb.Warning)
+
 
 value_type_metrics = [
     'lock_deadlocks', 'lock_timeouts', 'lock_row_lock_time_max',
@@ -29,16 +24,6 @@ value_type_metrics = [
 ]
 
 
-def time_start():
-    return time.time()
-
-
-def time_end(start):
-    end = time.time()
-    delay = end - start
-    return delay
-
-
 def get_metric_type(metric):
 
     if metric in value_type_metrics:
@@ -47,17 +32,19 @@ def get_metric_type(metric):
         return 'counter'
 
 
-def get_metrics(database):
-    # conn = MySQLdb.connect(
-    #     host=config['host'],
-    #     user=config['user'],
-    #     passwd=config['passwd'],
-    #     port=config['port']
-    # )
-    cmd = 'SELECT NAME, COUNT from information_schema.INNODB_METRICS where status="enabled" ORDER BY NAME'
-    data = database.fetch_all(cmd,json=False)
-    value = dict(data)
+def get_metrics(config):
+    conn = MySQLdb.connect(
+        host=config['host'],
+        user=config['user'],
+        passwd=config['passwd'],
+        port=config['port']
+    )
 
+    cursor = conn.cursor()
+    cmd = 'SELECT NAME, COUNT from information_schema.INNODB_METRICS where status="enabled" ORDER BY NAME'
+    cursor.execute(cmd)
+    data = cursor.fetchall()
+    value = dict(data)
     return value
 
 
@@ -141,67 +128,6 @@ def test_mysql(instance_name):
     return True
 
 
-def parse_json(url,data):
-    cdb_logger.info("request:{},data:{}".format(url,data))
-    try:
-        r = requests.get(url, data)
-        response = json.loads(r.text)
-    except requests.exceptions.ConnectionError:
-        os_quit(Err.HTTP_REQUERT_ERR,'ConnectionError -- please wait 3 seconds')
-    except requests.exceptions.ChunkedEncodingError:
-        os_quit(Err.HTTP_REQUERT_ERR,'ChunkedEncodingError -- please wait 3 seconds')
-    except :
-        os_quit(Err.HTTP_REQUERT_ERR,'Unfortunitely -- An Unknow Error Happened, Please wait 3 seconds')
-    return response
-
-
-
-def parse_json_post(url,data):
-    cdb_logger.info("request post:{},data:{}".format(url,data))
-    try:
-        r = requests.post(url, data)
-        response = json.loads(r.text)
-    except requests.exceptions.ConnectionError:
-        os_quit(Err.HTTP_REQUERT_ERR,'ConnectionError -- please wait 3 seconds')
-    except requests.exceptions.ChunkedEncodingError:
-        os_quit(Err.HTTP_REQUERT_ERR,'ChunkedEncodingError -- please wait 3 seconds')
-    except :
-        os_quit(Err.HTTP_REQUERT_ERR,'Unfortunitely -- An Unknow Error Happened, Please wait 3 seconds')
-    return response
-
-
-def get_tencent_instance_info(instance_name):
-    """ get Tencent Instance information
-    Args:
-        url: str, request url
-        instance_name: str, instance_name
-    Return:
-        info: tuple, (mem, disk)
-    Raises:
-        Exception: setup failed
-    """
-    db_info = instance_config[instance_name]
-    instance_id = db_info['instance_id']
-    operator = db_info['operator']
-    url = db_info['server_url']
-    data = dict()
-    data["instanceid"] = instance_id
-    data["operator"] = operator
-    para_list = []
-
-    data["para_list"] = para_list
-    data = json.dumps(data)
-    data = "data=" + data
-    inst_info = parse_json(url + '/get_inst_info.cgi', data)
-
-    if ("mem" in inst_info) and  ("disk" in inst_info):
-        mem,disk = inst_info["mem"],inst_info["disk"]
-        if mem > 0 and disk > 0:
-            return mem,disk 
-    else:
-        os_quit(Err.QUERY_INST_FAILED)
-
-
 def read_machine():
     """ Get the machine information, such as memory and disk
 
@@ -214,3 +140,8 @@ def read_machine():
     line = line.strip('\r\n')
     total = int(line.split(':')[1].split()[0])*1024
     return total
+
+
+
+
+

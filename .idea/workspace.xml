@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="efcbfcb2-9613-49fb-96ee-2e826294de4a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/AutoTuner/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/debug/internal_metrics.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/doc/deploy.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/doc/knobs.med" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/doc/settable_vars_5.6.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/doc/settable_vars_5.6.conf.20180726" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/doc/settable_vars_5.7.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/doc/settable_vars_5.7.conf.20180726" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/doc/specs.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/doc/variables.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/environment/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/environment/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/environment/base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/environment/configs.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/environment/configs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/environment/db.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/environment/default.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/environment/knobs.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/environment/knobs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/environment/knobs.py.Extend" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/environment/knobs.py.dele" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/environment/knobsALL.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/environment/knobsNotDecreasMAX.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/environment/mysql.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/environment/mysql.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/environment/mysql.py.bak" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/environment/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/environment/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/environment/utils.py.bak" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/models/OUProcess.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/models/OUProcess.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/models/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/models/ddpg.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/models/ddpg.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/models/ddpg_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/models/ddpg_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/models/dqn.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/models/dqn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/models/prioritized_replay_memory.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/models/replay_memory.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/models/replay_memory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/scripts/prepare.sh" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/scripts/prepare.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/scripts/run_sysbench.sh" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/scripts/run_sysbench.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/scripts/run_sysbench.test.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/scripts/run_tpcc.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/scripts/tpcc_load.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/server/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/server/server.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/server/start_server.sh" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/server/start_server.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/tuner/collect_fine_sas.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/tuner/collect_fine_sas.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/tuner/evaluate.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/tuner/evaluate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/tuner/get_proposal_knob.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/tuner/memory_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/tuner/memory_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/tuner/nohup.out" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/tuner/nohup.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/tuner/supervised_train.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/tuner/supervised_train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/tuner/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/tuner/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/tuner/tuner_configs.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/tuner/tuner_configs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoTuner/tuner/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoTuner/tuner/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/cdbtuneserver/app.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/cdbtuneserver/base.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/cdbtuneserver/build.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/cdbtuneserver/database.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/cdbtuneserver/http.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/cdbtuneserver/instpool.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/cdbtuneserver/main.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/cdbtuneserver/task.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/create_program.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/package/cdbtuneserver/etc/cdbtuneserver.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/package/cdbtuneserver/etc/cdbtuneserver.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/package/cdbtuneserver/tools/cron/check_all.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/package/cdbtuneserver/tools/cron/check_core.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/package/cdbtuneserver/tools/op/install.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/package/cdbtuneserver/tools/op/p.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/package/cdbtuneserver/tools/op/reload_cfg.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/package/cdbtuneserver/tools/op/start.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/package/cdbtuneserver/tools/op/stop.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/package/cdbtuneserver/tools/op/uninstall.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/package/make_distribution" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneserver/remove_program.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/base/common.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/base/database.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/base/knob.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/conf/app.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/controllers/default.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/controllers/task.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/main.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/routers/router.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/css/base.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/css/bootstrap-select.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/css/bootstrap.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/css/jquery.dataTables.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/css/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/css/themes/bootstrap-darkly.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/css/themes/bootstrap-default.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/css/themes/bootstrap-flatly.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/css/themes/bootstrap-sandstone.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/fonts/glyphicons-halflings-regular.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/fonts/glyphicons-halflings-regular.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/fonts/glyphicons-halflings-regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/fonts/glyphicons-halflings-regular.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/fonts/glyphicons-halflings-regular.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/img/ajax-loader.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/img/glyphicons-halflings-white.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/img/glyphicons-halflings.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/img/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/img/otter.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/img/sort_asc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/img/sort_both.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/img/sort_desc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/FixedHeader.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/benchmark_bar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/bootstrap-select.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/bootstrap-select.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/bootstrap.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/common.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/echarts.common.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/echarts.simple.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jqplot/excanvas.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jqplot/jqplot.barRenderer.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jqplot/jqplot.canvasAxisLabelRenderer.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jqplot/jqplot.canvasAxisTickRenderer.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jqplot/jqplot.canvasTextRenderer.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jqplot/jqplot.categoryAxisRenderer.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jqplot/jqplot.cursor.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jqplot/jqplot.dateAxisRenderer.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jqplot/jqplot.highlighter.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jqplot/jqplot.logAxisRenderer.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jqplot/jqplot.pointLabels.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jqplot/jquery.jqplot.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jqplot/jquery.jqplot.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jquery-1.10.2.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jquery-1.7.2.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jquery-migrate-1.2.1.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jquery.address-1.5.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jquery.dataTables.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/jquery.jqpagination.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/result10.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/static/js/timeline.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/404.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/510.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/base.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/base.html.orig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/change_password.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/dbms_data.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/dbms_reference.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/edit_param.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/edit_project.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/edit_session.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/edit_workload.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/home_projects.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/index.tpl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/nav.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/project_sessions.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/result.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/session.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/show_database.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/show_result.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/signup.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/task_manage.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/task_status.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/workload.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdbtuneweb/views/zanjie.tpl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/cdbtune/app.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/cdbtune/build.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/cdbtune/main.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/create_program.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/package/cdbtune/bin/alarm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/package/cdbtune/etc/cdbtune.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/package/cdbtune/etc/cdbtune.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/package/cdbtune/tools/cron/check_all.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/package/cdbtune/tools/cron/check_core.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/package/cdbtune/tools/op/install.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/package/cdbtune/tools/op/p.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/package/cdbtune/tools/op/reload_cfg.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/package/cdbtune/tools/op/start.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/package/cdbtune/tools/op/stop.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/package/cdbtune/tools/op/uninstall.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/package/make_distribution" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/remove_program.sh" beforeDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/AutoTuner/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="100">
+                <caret line="34" lean-forward="true" selection-start-line="34" selection-end-line="34" />
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/AutoTuner" />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-3" />
+    <option name="y" value="31" />
+    <option name="width" value="1030" />
+    <option name="height" value="691" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="CDBTune" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CDBTune" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CDBTune" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CDBTune" type="462c0819:PsiDirectoryNode" />
+              <item name="AutoTuner" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="efcbfcb2-9613-49fb-96ee-2e826294de4a" name="Default Changelist" comment="" />
+      <created>1572062281144</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1572062281144</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
+    <layout>
+      <window_info id="Favorites" side_tool="true" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14880113" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" weight="0.32884097" />
+      <window_info anchor="bottom" id="Python Console" weight="0.32884097" />
+      <window_info active="true" anchor="bottom" id="Terminal" visible="true" weight="0.5579515" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32884097" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/AutoTuner/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="50">
+          <caret line="2" column="13" lean-forward="true" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AutoTuner/tuner/train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="20" column="46" selection-start-line="20" selection-start-column="46" selection-end-line="20" selection-end-column="46" />
+          <folding>
+            <element signature="e#49#58#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AutoTuner/environment/configs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-161" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AutoTuner/environment/knobs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-975" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AutoTuner/environment/mysql.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-225" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AutoTuner/environment/utils.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AutoTuner/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-600" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AutoTuner/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="100">
+            <caret line="34" lean-forward="true" selection-start-line="34" selection-end-line="34" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

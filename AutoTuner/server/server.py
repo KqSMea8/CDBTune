@@ -27,7 +27,7 @@ def get_state():
 def check_start():
     a = sudo_exec('sudo tail -1 /var/log/mysql/ubunturmw.err', '123456')
     a = a.strip('\n\r')
-    if a.find('pid ended') != -1:
+    if a.find('/var/lib/mysql/ubunturmw.pid ended') != -1:
         sudo_exec('sudo service mysql start', '123456')
 
 

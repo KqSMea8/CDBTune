@@ -6,7 +6,6 @@ description: MySQL Environment
 import re
 import os
 import time
-import math
 import datetime
 import json
 import threading
@@ -16,24 +15,17 @@ import configs
 import utils
 import knobs
 import requests
-import psutil
-from base import *
-from db import database
-from utils import *
-
-logger = cdb_logger
 
 
-
-class Status(object):
-    OK = 'OK'
-    FAIL = 'FAIL'
-    RETRY = 'RETRY'
+# TEMP_FILES = "/data/AutoTuner/train_result/tmp/"
+# PROJECT_DIR = "/data/"
+TEMP_FILES = "/home/rmw/train_result/tmp/"
+PROJECT_DIR = "/home/rmw/"
 
 
 class MySQLEnv(object):
 
-    def __init__(self, wk_type='read', method='sysbench',  alpha=1.0, beta1=0.5, beta2=0.5, time_decay1=1.0, time_decay2=1.0):
+    def __init__(self, wk_type='read', alpha=1.0, beta1=0.5, beta2=0.5, time_decay1=1.0, time_decay2=1.0):
 
         self.db_info = None
         self.wk_type = wk_type
@@ -43,37 +35,16 @@ class MySQLEnv(object):
         self.last_external_metrics = None
         self.default_externam_metrics = None
 
-        self.method = method
         self.alpha = alpha
         self.beta1 = beta1
         self.beta2 = beta2
         self.time_decay_1 = time_decay1
         self.time_decay_2 = time_decay2
-       
 
     @staticmethod
-    def _get_external_metrics(path, method='sysbench'):
+    def _get_external_metrics(path):
 
-        def parse_tpcc(file_path):
-            with open(file_path) as f:
-                lines = f.read()
-            temporal_pattern = re.compile(".*?trx: (\d+.\d+), 95%: (\d+.\d+), 99%: (\d+.\d+), max_rt:.*?")
-            temporal = temporal_pattern.findall(lines)
-            tps = 0
-            latency = 0
-            qps = 0
-
-            for i in temporal[-10:]:
-                tps += float(i[0])
-                latency += float(i[2])
-            num_samples = len(temporal[-10:])
-            tps /= num_samples
-            latency /= num_samples
-            # interval
-            tps /= 1
-            return [tps, latency, tps]
-
-        def parse_sysbench(file_path):
+        def parse_sysbench_new(file_path):
             with open(file_path) as f:
                 lines = f.read()
             temporal_pattern = re.compile(
@@ -84,22 +55,18 @@ class MySQLEnv(object):
             latency = 0
             qps = 0
 
-            for i in temporal[-10:]:
+            for i in temporal[5:]:
                 tps += float(i[0])
                 latency += float(i[5])
                 qps += float(i[1])
-            num_samples = len(temporal[-10:])
+            num_samples = len(temporal[5:])
             tps /= num_samples
             qps /= num_samples
             latency /= num_samples
             return [tps, latency, qps]
 
-        if method == 'sysbench':
-            result = parse_sysbench(path)
-        elif method == 'tpcc':
-            result = parse_tpcc(path)
-        else:
-            result = parse_sysbench(path)
+        result = parse_sysbench_new(path)
+
         return result
 
     def _get_internal_metrics(self, internal_metrics):
@@ -111,33 +78,27 @@ class MySQLEnv(object):
         """
         _counter = 0
         _period = 5
-        count = 160/5
+        count = 12
 
         def collect_metric(counter):
             counter += 1
             timer = threading.Timer(_period, collect_metric, (counter,))
-            
-
             timer.start()
-            db = database(self.db_info["host"],
-                    self.db_info["port"],self.db_info["user"],
-                    self.db_info["password"],
-                    "sbtest",
-                    )
             if counter >= count:
                 timer.cancel()
             try:
-                data = utils.get_metrics(db)
+                data = utils.get_metrics(self.db_info)
                 internal_metrics.append(data)
-            except Exception as err:
-                logger.info("[GET Metrics]Exception:" ,err) 
+            except MySQLdb.Error as e:
+                print("[GET Metrics]Exception:%s" % e.message)
 
         collect_metric(_counter)
 
         return internal_metrics
 
-    def _post_handle(self, metrics):
-        result = np.zeros(self.num_metric)
+    @staticmethod
+    def _post_handle(metrics):
+        result = np.zeros(63)
 
         def do(metric_name, metric_values):
             metric_type = utils.get_metric_type(metric_name)
@@ -147,12 +108,12 @@ class MySQLEnv(object):
                 return float(sum(metric_values))/len(metric_values)
 
         keys = metrics[0].keys()
-
         keys.sort()
         for idx in xrange(len(keys)):
             key = keys[idx]
             data = [x[key] for x in metrics]
             result[idx] = do(key, data)
+
         return result
 
     def initialize(self):
@@ -171,133 +132,50 @@ class MySQLEnv(object):
         if not flag:
             return {"tps": 0, "latency": 0}
 
-        external_metrics, _ = self._get_state(knob, method=self.method)
+        external_metrics, _ = self._get_state()
         return {"tps": external_metrics[0],
                 "latency": external_metrics[1]}
-
-    def _get_best_now(self, filename):
-        with open(self.best_result) as f:
-            lines = f.readlines()
-        best_now = lines[0].split(',')
-        return [float(best_now[0]), float(best_now[1]), float(best_now[0])]
-
-    def record_best(self, external_metrics):
-        best_flag = False
-        if os.path.exists(self.best_result):
-            tps_best = external_metrics[0]
-            lat_best = external_metrics[1]
-            rate = 0
-            if int(lat_best) != 0:
-                rate = float(tps_best)/lat_best
-                with open(self.best_result) as f:
-                    lines = f.readlines()
-                best_now = lines[0].split(',')
-                rate_best_now = float(best_now[0])/float(best_now[1])
-                if rate > rate_best_now:
-                    best_flag = True
-                    with open(self.best_result, 'w') as f:
-                        f.write(str(tps_best) + ',' + str(lat_best) + ',' + str(rate))
-        else:
-            file = open(self.best_result, 'wr')
-            tps_best = external_metrics[0]
-            lat_best = external_metrics[1]
-            rate = 0
-            if int(lat_best) == 0 :
-                rate = 0
-            else:
-                rate = float(tps_best)/lat_best
-            file.write(str(tps_best) + ',' + str(lat_best) + ',' + str(rate))
-        return best_flag
 
     def step(self, knob):
         """step
         """
-        restart_time = utils.time_start()
         flag = self._apply_knobs(knob)
-        restart_time = utils.time_end(restart_time)
         if not flag:
-            return -10000000.0, np.array([0] * self.num_metric), True, self.score - 10000000, [0, 0, 0], restart_time
-        s = self._get_state(knob, method=self.method)
-        if s is None:
-            return -10000000.0, np.array([0] * self.num_metric), True, self.score - 10000000, [0, 0, 0], restart_time
-        external_metrics, internal_metrics = s
+            return -100.0, np.array([0] * 63), True, self.score - 100, [0, 0, 0]
 
+        external_metrics, internal_metrics = self._get_state()
         reward = self._get_reward(external_metrics)
-        flag = self.record_best(external_metrics)
-        if flag == True:
-            logger.info('Better performance changed!')
-        else:
-            logger.info('Performance remained!')
-        #get the best performance so far to calculate the reward
-        best_now_performance = self._get_best_now(self.best_result)
-        self.last_external_metrics = best_now_performance
-
+        self.last_external_metrics = external_metrics
         next_state = internal_metrics
         terminate = self._terminate()
         knobs.save_knobs(
-            knob = knob,
-            metrics = external_metrics,
-            instance=self.db_info,
-            task_id=self.task_id
+            knob=knob,
+            metrics=external_metrics,
+            knob_file='%sAutoTuner/tuner/save_knobs/knob_metric.txt' % PROJECT_DIR
         )
-        return reward, next_state, terminate, self.score, external_metrics, restart_time
+        return reward, next_state, terminate, self.score, external_metrics
 
-    def setting(self, knob):
-        self._apply_knobs(knob)
-    
-    def _get_state(self, knob, method='sysbench'):
+    def _get_state(self):
         """Collect the Internal State and External State
         """
+        filename = TEMP_FILES
+        if not os.path.exists(filename):
+            os.mkdir(filename)
         timestamp = int(time.time())
-        
-        filename = CONST.FILE_LOG_SYSBENCH % (self.task_id,timestamp)
-        
+        filename += '%s.txt' % timestamp
         internal_metrics = []
         self._get_internal_metrics(internal_metrics)
-        #calculate the sysbench time automaticly
-        if knob['innodb_buffer_pool_size'] < 161061273600:
-            time_sysbench = 150
-        else:
-            time_sysbench = int(knob['innodb_buffer_pool_size']/1024.0/1024.0/1024.0/1.1)
-        if self.method == 'sysbench':
-            a = time.time()
-            _sys_run = "bash %s %s %s %d %s %s %d %d %d %d %s" % (CONST.BASH_SYSBENCH,
-                self.wk_type,self.db_info['host'],self.db_info['port'],self.db_info['user'],self.db_info['password'],
-                self.db_info['tables'],self.db_info['table_size'],self.threads, time_sysbench, filename)
 
-            logger.info("sysbench started")
-            logger.info(_sys_run)
-            osrst = os.system(_sys_run)
-            logger.info("sysbench ended")
+        os.system("bash %sAutoTuner/scripts/run_sysbench.sh %s %s %d %s %s" % (PROJECT_DIR,
+                                                                               self.wk_type,
+                                                                               self.db_info['host'],
+                                                                               self.db_info['port'],
+                                                                               self.db_info['passwd'],
+                                                                               filename))
 
-            a = time.time() - a
-    
-            if osrst != 0 or a < 50:
-                os_quit(Err.RUN_SYSYBENCH_FAILED)
+        time.sleep(10)
 
-        elif self.method == 'tpcc':
-            def kill_tpcc():
-                def _filter_pid(x):
-                    try:
-                        x = psutil.Process(x)
-                        if x.name() == 'tpcc_start':
-                            return True
-                        return False
-                    except:
-                        return False
-                pids = psutil.pids()
-                tpcc_pid = filter(_filter_pid, pids)
-                logger.info(tpcc_pid) 
-                for tpcc_pid_i in tpcc_pid:
-                    os.system('kill %s' % tpcc_pid_i)
-
-            timer = threading.Timer(170, kill_tpcc)
-            timer.start()
-            os.system('bash %s %s %d %s %s' % (CONST.BASH_TPCC,
-                self.db_info['host'],self.db_info['port'],self.db_info['passwd'],filename))
-            time.sleep(10)
-
-        external_metrics = self._get_external_metrics(filename, method)
+        external_metrics = self._get_external_metrics(filename)
         internal_metrics = self._post_handle(internal_metrics)
 
         return external_metrics, internal_metrics
@@ -311,11 +189,10 @@ class MySQLEnv(object):
     def _calculate_reward(delta0, deltat):
 
         if delta0 > 0:
-            _reward = ((1+delta0)**2-1) * math.fabs(1+deltat)
+            _reward = ((1+delta0)**2-1) * (1+deltat)
         else:
-            _reward = - ((1-delta0)**2-1) * math.fabs(1-deltat)
-
-        if _reward > 0 and deltat < 0:
+            _reward = - ((1-delta0)**2-1) * (1-deltat)
+        if _reward and deltat < 0:
             _reward = 0
         return _reward
 
@@ -326,11 +203,7 @@ class MySQLEnv(object):
         Return:
             reward: float, a scalar reward
         """
-        logger.info('*****************************')
-        logger.info(external_metrics)
-        logger.info(self.default_externam_metrics)
-        logger.info(self.last_external_metrics)
-        logger.info('*****************************')
+
         # tps
         delta_0_tps = float((external_metrics[0] - self.default_externam_metrics[0]))/self.default_externam_metrics[0]
         delta_t_tps = float((external_metrics[0] - self.last_external_metrics[0]))/self.last_external_metrics[0]
@@ -342,111 +215,32 @@ class MySQLEnv(object):
         delta_t_lat = float((-external_metrics[1] + self.last_external_metrics[1])) / self.last_external_metrics[1]
 
         lat_reward = self._calculate_reward(delta_0_lat, delta_t_lat)
-        
+
         reward = tps_reward * 0.4 + 0.6 * lat_reward
         self.score += reward
-        logger.info('$$$$$$$$$$$$$$$$$$$$$$')
-        logger.info(tps_reward)
-        logger.info(lat_reward)
-        logger.info(reward)
-        logger.info('$$$$$$$$$$$$$$$$$$$$$$')
-        if reward > 0:
-            reward = reward*1000000
         return reward
 
     def _terminate(self):
         return self.terminate
 
 
-class TencentServer(MySQLEnv):
-    """ Build an environment in Tencent Cloud
+class Server(MySQLEnv):
+    """ Build an environment directly on Server
     """
 
-    def __init__(self,  instance, task_detail,model_detail,host):
-        """Initialize `TencentServer` Class
-        Args:
-            instance_name: str, mysql instance name, get the database infomation
-        """
-        MySQLEnv.__init__(self, task_detail["rw_mode"])
-        # super(MySQLEnv, self).__init__()
-        self.wk_type = task_detail["rw_mode"]
+    def __init__(self, wk_type, instance_name):
+        MySQLEnv.__init__(self, wk_type)
+        self.wk_type = wk_type
         self.score = 0.0
-        self.num_metric = model_detail["dimension"]
         self.steps = 0
-        self.task_id = task_detail["task_id"]
         self.terminate = False
         self.last_external_metrics = None
-        self.db_info = instance
-        self.host = host
+        self.instance_name = instance_name
+        self.db_info = configs.instance_config[instance_name]
+        self.server_ip = self.db_info['host']
         self.alpha = 1.0
-        self.method = task_detail["run_mode"]
-        self.best_result = CONST.FILE_LOG_BEST % self.task_id
-        self.threads = task_detail["threads"]
-
-        knobs.init_knobs(instance,model_detail["knobs"])
+        knobs.init_knobs(instance_name)
         self.default_knobs = knobs.get_init_knobs()
-
-    def _set_params(self, knob):
-        """ Set mysql parameters by send GET requests to server
-        Args:
-            knob: dict, mysql parameters
-        Return:
-            workid: str, point to the setting process
-        Raises:
-            Exception: setup failed
-        """
-        
-        instance_id = self.db_info['instance_id']
-
-        data = dict()
-        data["instanceid"] = instance_id
-        data["operator"] = "cdbtune"
-        para_list = []
-        for kv in knob.items():
-            para_list.append({"name": str(kv[0]), "value": str(kv[1])})
-        data["para_list"] = para_list
-        data = json.dumps(data)
-        data = "data=" + data
-        
-        response = parse_json(CONST.URL_SET_PARAM % self.host, data)
-        
-        err = response['errno']
-        if err != 0:
-            raise Exception("SET UP FAILED: {}".format(err))
-
-        # if restarting isn't needed, workid should be ''
-        workid = response.get('workid', '')
-
-        return workid
-
-    def _get_setup_state(self, workid):
-        """ Set mysql parameters by send GET requests to server
-        Args:
-            workid: str, point to the setting process
-        Return:
-            status: str, setup status (running, undoed)
-        Raises:
-            Exception: get state failed
-        """
-        instance_id = self.db_info['instance_id']
-
-        data = dict()
-        data['instanceid'] = instance_id
-        data['operator'] = "cdbtune"
-        data['workid'] = workid
-        data = json.dumps(data)
-        data = 'data=' + data
-
-        response = parse_json(CONST.URL_QUERY_SET_PARAM % self.host, data)
-
-        err = response['errno']
-        status = response['status']
-
-        if err != 0:
-            # raise Exception("GET STATE FAILED: {}".format(err))
-            return "except"
-
-        return status
 
     def initialize(self):
         """ Initialize the environment when an episode starts
@@ -459,32 +253,22 @@ class TencentServer(MySQLEnv):
         self.terminate = False
 
         flag = self._apply_knobs(self.default_knobs)
-        i = 0
-        while not flag:
-            if i >= 2:
-                logger.info("Initialize: {} times ....".format(i))
-                os_quit(Err.SET_MYSQL_PARAM_FAILED)
+        i = 3
+        while i >= 0 and not flag:
             flag = self._apply_knobs(self.default_knobs)
-            i += 1
-        
+            i -= 1
+        if i < 0 and not flag:
+            print("[Env initializing failed]")
+            exit(-1)
 
-        external_metrics, internal_metrics = self._get_state(knob = self.default_knobs, method=self.method)
-        if os.path.exists(self.best_result):
-            if os.path.getsize(self.best_result):
-                with open(self.best_result) as f:
-                    lines = f.readlines()
-                best_now = lines[0].split(',')
-                self.last_external_metrics = [float(best_now[0]), float(best_now[1]), float(best_now[0])]
-        else:
-            self.last_external_metrics = external_metrics
+        external_metrics, internal_metrics = self._get_state()
+        self.last_external_metrics = external_metrics
         self.default_externam_metrics = external_metrics
-
         state = internal_metrics
         knobs.save_knobs(
             self.default_knobs,
             metrics=external_metrics,
-            instance=self.db_info,
-            task_id=self.task_id
+            knob_file='%sAutoTuner/tuner/save_knobs/knob_metric.txt' % PROJECT_DIR
         )
         return state, external_metrics
 
@@ -493,51 +277,46 @@ class TencentServer(MySQLEnv):
         Args:
             knob: dict, mysql parameters
         Returns:
-            flag: status, ['OK', 'FAIL', 'RETRY']
+            flag: whether the setup is valid
         """
         self.steps += 1
-        i = 2
-        workid = ''
-        while i >= 0:
-            try:
-                workid = self._set_params(knob=knob)
-            except Exception as e:
-                logger.error("{}".format(e.message))
-            else:
-                break
-            time.sleep(20)
-            i -= 1
-        if i == -1:
-            logger.error("Failed too many times!")
-            os_quit(Err.SET_MYSQL_PARAM_FAILED)
-            return False
+        utils.modify_configurations(
+            server_ip=self.server_ip,
+            instance_name=self.instance_name,
+            configuration=knob
+        )
 
-        # set parameters without restarting, sleep 20 seconds
-        if len(workid) == 0:
-            time.sleep(20)
-            return True
-
-        logger.info("Finished setting parameters..")
         steps = 0
-        max_steps = 500
-
-        status = self._get_setup_state(workid=workid)
-        while status in ['not_start','running', 'pause', 'paused', 'except'] and steps < max_steps:
-            time.sleep(15)
-            status = self._get_setup_state(workid=workid)
+        max_steps = 300
+        flag = utils.test_mysql(self.instance_name)
+        while not flag and steps < max_steps:
+            _st = utils.get_mysql_state(self.server_ip)
+#            if not _st:
+#                return False
+            time.sleep(5)
+            flag = utils.test_mysql(self.instance_name)
             steps += 1
 
-        logger.info("Out of Loop, status: {} loop step: {}".format(status, steps))
-
-        if status == 'normal_finish':
-            return True
-
-        if status in ['notstart', 'undoed', 'undo'] or steps > max_steps:
-            time.sleep(15)
+        if not flag:
+            utils.modify_configurations(
+                server_ip=self.server_ip,
+                instance_name=self.instance_name,
+                configuration=self.default_knobs
+            )
             params = ''
             for key in knob.keys():
                 params += ' --%s=%s' % (key, knob[key])
-            logger.error("set param failed: {}".format(params))
+            with open('failed.log', 'a+') as f:
+                f.write('{}\n'.format(params))
             return False
+        else:
+            return True
 
-        return False
+
+DockerServer = Server
+
+'''
+以下为在腾讯公司提供云环境下进行的实验，由于涉及腾讯公司的数据隐私，所以不方便显示
+'''
+class TencentServer(MySQLEnv):
+    pass
